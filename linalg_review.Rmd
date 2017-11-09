@@ -1,0 +1,313 @@
+---
+title: "Linear Algebra Review"
+author: "Eric Bridgeford"
+date: "November 9, 2017"
+output: html_document
+header-includes:
+   - \usepackage{amsmath}
+   - \usepackage{amsthm}
+   - \usepackage{mathtools}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+General assumptions (unless otherwise stated):  
+
+* $x \in \mathbb{R}^n$ is a $n$-dimensional column-vector.
+* $A \in \mathbb{R}^{m \times n}$ is the matrix where the $i^{th}$ column of $A$ is denoted $a_i$ and the $i^{th}$ row denoted $a_i^*$.
++ $0_m$ is the $m$-dimensional $0$ vector, where each entry is $0$.
+
+# Linear Algebra Basics
+
+## Matrix-Vector Product
+
+Goal: $b = Ax$
+
+Can be expressed in two ways:
+
+\begin{align*}
+b_i = \sum_{j=1}^n a_{ij}x_j
+\end{align*}
+
+\begin{align*}
+b = Ax = \sum_{j=1}^n x_j a_j
+\end{align*}
+
+visually, we can look at the bottom version as:
+
+\begin{align*}
+\begin{bmatrix}
+ \\ b \\
+\end{bmatrix} &= 
+\begin{bmatrix}
+  \vdots &\vdots & &\vdots \\
+  a_1 & a_2 & ... & a_n \\
+  \vdots &\vdots & &\vdots \\
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ \vdots \\ x_n
+\end{bmatrix} \\
+&= x_1 \begin{bmatrix}
+  \vdots \\
+  a_1 \\
+  \vdots \\
+\end{bmatrix} +
+x_2 \begin{bmatrix}
+  \vdots \\
+  a_2 \\
+  \vdots \\
+\end{bmatrix} +
+... + 
+x_n \begin{bmatrix}
+  \vdots \\
+  a_n \\
+  \vdots \\
+\end{bmatrix}
+\end{align*}
+
+which shows that $b$ is the vector of a linear combination of the columns of $A$ with coefficients $x$.
+
+## Matrix-Matrix Product
+
+Goal: $B = AC$
+
+given $A \in \mathbb{R}^{l \times m}$, $C \in \mathbb{R}^{m \times n}$. Then $B \in \mathbb{R}^{l \times n}$ can be expressed as:
+
+\begin{align*}
+b_{ij} &= \sum_{k=1}^m a_{ik} c_{kj}
+\end{align*}
+
+In terms of columns, this can be expressed:
+
+\begin{align*}
+\begin{bmatrix}
+  \vdots &\vdots & &\vdots \\
+  b_1 & b_2 & ... & b_n \\
+  \vdots &\vdots & &\vdots \\
+\end{bmatrix} &=
+\begin{bmatrix}
+  \vdots &\vdots & &\vdots \\
+  a_1 & a_2 & ... & a_m \\
+  \vdots &\vdots & &\vdots \\
+\end{bmatrix}
+\begin{bmatrix}
+  \vdots &\vdots & &\vdots \\
+  c_1 & c_2 & ... & c_n \\
+  \vdots &\vdots & &\vdots \\
+\end{bmatrix}
+\end{align*}
+
+we can express each column $b_j$:
+
+\begin{align*}
+  b_j &= Ac_j = \sum_{k=1}^m c_{kj} a_k
+\end{align*}
+
+and we can see that the columns of $B$ are a linear combination of the columns of $A$ with coefficients as the columns of $C$.
+
+## Dependence
+
+Given a set $S = \left\{x_i\right\}_{i=1}^n$ where each $x_i \in \mathbb{R}^m$, the set $S$ is said to be linearly dependent if the sum:
+
+\begin{align*}
+  \sum_{i=1}^n a_i x_i = 0_m
+\end{align*}
+
+can be satisfied by some non-trivial $a \neq 0_n$. This means that some entry $a_i$ of $a$ is non-zero, which means that we can express:
+
+\begin{align*}
+  a_ix_i &= -\sum_{j \neq i}a_j x_j \\
+  x_i &= -\sum_{j \neq i}\frac{a_j}{a_i} x_j \\
+\end{align*}
+
+And we can see that $x_i$ is a linear combination of the remaining vectors $x_j$ for $j \neq i$ with coefficients given by $\frac{a_j}{a_i}$.
+
+## Independence
+
+Given a set $S = \left\{x_i\right\}_{i=1}^n$ where each $x_i \in \mathbb{R}^m$, the set $S$ is said to be linearly independent if the sum:
+
+\begin{align*}
+  \sum_{i=1}^n a_i x_i = 0_m
+\end{align*}
+
+is only satisfied by the trivial vector $a = 0_n$. This means that $no$ vectors $x_i \in S$ can be expressed as a linear combination of the remaining vectors. That is, for each $x_i$:
+
+\begin{align*}
+  a_ix_i &= -\sum_{j \neq i}a_j x_j
+\end{align*}
+
+is not satisfiable by anything but $a = 0_n$.
+
+## Range
+
+The $range$ of a matrix $A$, written $range(A)$, for $A \in \mathbb{R}^{m \times n}$ is denoted:
+
+\begin{align*}
+  range(A) &= \left\{Ax | x \in \mathbb{R}^n\right\}
+\end{align*}
+
+the $range$ is also called the $columnspace$ of $A$.
+
+## Nullspace
+
+The $nullspace$ of a matrix $A$, written $null(A)$, for $A \in \mathbb{R}^{m \times n}$ is denoted:
+
+\begin{align*}
+  null(A) = \left\{x | Ax = 0_m\right\}
+\end{align*}
+
+## Rank
+
+The $column\;rank$ of a matrix is the number of dimensions of the column-space, and the $row\;rank$ of a matrix is the number of dimensions of the row-space. The row-rank is always equivalent to the column-rank, and this number is simply called the rank (proof is due to the SVD; more later).
+
+### Full Rank
+M
+A matrix $A \in \mathbb{R}^{m \times n}$ is full rank if $rank(A) = \min(m, n)$.
+
+Theorem: A matrix $A \in \mathbb{R}^{m \times n}$ where $m \geq n$ is full rank iff (if and only if) it maps no two distinct vectors to the same vector.
+
+\paragraph{$\to$}
+\begin{proof}
+If $A$ is of full rank, that means its columns are linearly independent and form a basis of $range(A)$. Then for every $b \in range(A)$, we can express $b$ in terms of a unique set of coefficients $x: b = Ax$. Then since this set of coefficients is unique, this implies that if $b = Ax = Ay$ that $x = y$. Then no two distinct vectors are mapped to the same vector.
+\end{proof}
+
+\paragraph{$\gets$}
+\begin{proof}
+If $A$ is not of full rank, this means the columns $a_j$ have a dependency, then $\sum_{j=1}^n c_j a_j = 0$ where $c$ is non-trivial (not the zero vector). Then the nonzero ector $c$ formed from the coefficients $c_j$ satisfies $Ac = 0_m$. Then by the distributive property, we know that $Ax + Ac = Ax$ since $Ac = 0_m$ can be rewritten with $A(x + c) = Ax$. Then since $c$ is nontrivial, we know that $x + c \neq x$, but the vector $(x + c)$ is mapped to the same thing as $x$. 
+\end{proof}
+
+## Inverse
+
+A $nonsingular$ or $invertible$ matrix a square matrix that has full rank. That is, $A \in \mathbb{R}^{m \times m}$ where $rank(A) = m$. This means that we can express the space $\mathbb{R}^m$ in terms of a the $m$ columns of $A$, meaning that we have a basis for $\mathbb{R}^m$. Given the canonical basis denoted by the set of vectors $\left\{e_j\right\}_{j=1}^m:
+
+\begin{align*}
+  e_{ij} := \begin{cases}
+    1 & i = j \\
+    0 & otherwise
+  \end{cases}
+\end{align*}
+
+By the definition of full-rank, since $e_{j} \in \mathbb{R}^m$, then we can express each $e_j$ as a linear combination of the columns of $A$ with coefficients given by the columns of $Z$:
+
+\begin{align*}
+  e_j &= \sum_{i=1}^m z_{ij}a_i
+\end{align*}
+
+Which can similarly be expressed as above as:
+
+\begin{align*}
+\begin{bmatrix}
+  \vdots &\vdots & &\vdots \\
+  e_1 & e_2 & ... & e_m \\
+  \vdots &\vdots & &\vdots \\
+\end{bmatrix} &= I =
+\begin{bmatrix}
+1 &  &  \\
+ & \ddots & \\
+ &  & 1
+\end{bmatrix} =
+AZ
+\end{align*}
+
+Then $Z$ is called the inverse of $A$ and written $Z = A^{-1}$, where $AA^{-1} = A^{-1}A = I$.
+
+# Orthogonality
+
+## Adjoints
+
+The adjoint of a matrix $A$, written $A^*$, for $A \in \mathbb{C}^{m \times n}$ can be expressed:
+
+\begin{align*}
+  A &= \begin{bmatrix}
+  a_{11} & ... & a_{1n} \\
+  \vdots & \ddots & \vdots \\
+  a_{m1} & ... & a_{mn}
+  \end{bmatrix} \\
+  A^* &= \begin{bmatrix}
+  \bar{a}_{11} & ... & \bar{a}_{m1} \\
+  \vdots & \ddots & \vdots \\
+  \bar{a}_{1n} & ... & \bar{a}_{mn}
+  \end{bmatrix}
+\end{align*}
+
+where $\bar{a}_{ij}$ is the complex-conjugate of $a_{ij}$.
+If $A \in \mathbb{R}^{m \times n}$, then we know that $a_{ij} = \bar{a}_{ij}$, so $A^* = A^T$. 
+
+A matrix is called $hermitian$ if $A= A^*$. For real matrices, this also means that $A = A^* = A^T$. If $A = A^T$, $A$ is called $symmetric$.
+
+## Inner Product
+
+The inner product of two vectors $x, y \in \mathbb{R}^m$ is written:
+
+\begin{align*}
+\langle x, y\rangle &= x^*y = \sum_{i=1}^m \bar{x}_i y_i = \sum_{i=1}^m x_i y_i
+\end{align*}
+
+where $\bar{x}_i = x_i$ since $x, y$ are both real.
+
+### Euclidian Norm
+
+The standard $\mathbb{L}_2$ norm (the euclidian norm) that can be written:
+
+\begin{align*}
+  ||x||_{\mathbb{L}_2} &= \sqrt{\langle x, x \rangle} = \sqrt{\left(\sum_{i=1}^m |x_i|^2\right)}
+\end{align*}
+
+## Orthogonality of Two Vectors
+
+Two vectors $x, y \in \mathbb{R}^m$ are called $orthogonal$ if $\langle x, y \rangle = 0_m$.
+
+### Set Orthogonality
+
+Take the set $S$ to be $|S|$ vectors where $S = \left\{x_i\right\}_{i=1}^{|S|}$ and $x_i \in \mathbb{R}^m$. These vectors are said to be orthogonal if for any $x_i, x_j \in S$, $\langle x_i, x_j\rangle = 0_m$ for all $i \neq j$. That is, the elements of $S$ are pairwise-orthogonal for all pairs $x_i, x_j$ taken from $S$.
+
+### Set Orthonormality
+
+Orthonormality takes orthogonality a step further. In addition to requiring that the set is orthogonal, we add the constraint that for all $x_i$, $||x_i|| = 1$.
+
+Theorem: The vectors of an orthogonal set $S$ are linearly independent.
+
+We will use proof by contradiction.
+\begin{proof}
+Assume the vectors in $S$ are not independent. Then for some $v_k \in S$, we can express it as a linear combination of the remaining vectors $v_j \in S$ for $j \neq k$; that is:
+\begin{align*}
+v_k = \sum_{j \neq k} c_j v_j
+\end{align*}
+
+Since $v_k \neq 0_m$ (since it is non-trivial), then there must be some entry $v_k^{(i)} > 0$, then it is clear that $||v_k||^2 > 0$. Then we can see that:
+
+\begin{align*}
+  \langle v_k, v_k\rangle &= v_k^* v_k = v_k^* \sum_{i \neq k} c_i v_i = \sum_{i \neq k} c_i v_k^* v_i = 0
+\end{align*}
+
+since $\langle v_i, v_j\rangle = 0$ for all $i \neq j$. This contradicts the assumption that the vectors in $S$ are nonzero.
+\end{proof}
+
+## Components of a Vector
+
+Given some arbitrary vector $v \in \mathbb{R}^m$, and a set $S = \left\{q_i\right\}_{i=1}^n$ that is orthonormal, express the vector $v$ in terms of the set $S$. Let $r$ be defined:
+
+\begin{align*}
+  r = v - \sum_{i=1}^n \langle q_i, v\rangle q_i
+\end{align*}
+
+where $\langle q_i, v\rangle$ are the coefficients of our projection onto $q_i$ of the vector $v$. Then $r$ is the orthogonal component of $v$ to $S$, as we can see that for any $q_i \in S$:
+
+\begin{align*}
+  \langle q_i, r\rangle &= \langle q_1, v\rangle - \langle q_1, v\rangle\langle q_i, q_1\rangle - ... - \langle q_n, v\rangle \langle q_i, q_n\rangle
+\end{align*}
+
+Since we know that $\langle q_i, q_j\rangle = 0$ wherever $i \neq j$, and $1$ otherwise, then:
+
+\begin{align*}
+  \langle q_i, r\rangle &= \langle q_i, v\rangle - \langle q_i, v\rangle\langle q_i, i\rangle = 0
+\end{align*}
+
+Therefore showing that $r$ is orthogogonal to $S$. Then any $v$ can be expressed:
+
+\begin{align*}
+  v &= r + \sum_{i=1}^n \langle q_i, v \rangle q_i
+\end{align*}
+
